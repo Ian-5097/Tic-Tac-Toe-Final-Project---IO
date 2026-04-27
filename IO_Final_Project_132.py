@@ -1,9 +1,14 @@
 class TicTacToe:
     def __init__(self):
+        self.score = {"X": 0, "O": 0}
+        self.reset_board()
+
+    def reset_board(self):
         self.board = [[" " for _ in range(3)] for _ in range(3)]
         self.current_player = "X"
+        self.moves_played = 0
 
-    #DISPLAY
+    #display
     def print_board(self):
         print("\n    0   1   2")
         print("  -------------")
@@ -12,7 +17,7 @@ class TicTacToe:
             print("  -------------")
         print()
 
-    #GAME LOGIC
+    #game logic 
     def check_winner(self):
         b = self.board
         p = self.current_player
@@ -37,9 +42,9 @@ class TicTacToe:
         return False
 
     def is_draw(self):
-        return all(cell != " " for row in self.board for cell in row)
+        return self.moves_played == 9
 
-    #INPUT 
+    #Input
     def get_move(self):
         while True:
             try:
@@ -64,30 +69,35 @@ class TicTacToe:
             except ValueError:
                 print("Invalid input. Example: 1 2")
 
-    #GAME LOOP
+    #Game Loop
     def play(self):
         print("\n=== TIC TAC TOE ===")
 
-        while True:
+        game_over = False
+
+        while not game_over:
             self.print_board()
 
             row, col = self.get_move()
             self.board[row][col] = self.current_player
+            self.moves_played += 1
 
             if self.check_winner():
                 self.print_board()
-                print(f"\n🎉 Player {self.current_player} wins!")
-                break
+                print(f"\nPlayer {self.current_player} wins!")
+                self.score[self.current_player] += 1
+                game_over = True
 
-            if self.is_draw():
+            elif self.is_draw():
                 self.print_board()
                 print("\n🤝 It's a draw!")
-                break
+                game_over = True
 
-            self.current_player = "O" if self.current_player == "X" else "X"
+            else:
+                self.current_player = "O" if self.current_player == "X" else "X"
 
 
-#RUN
+#Run
 if __name__ == "__main__":
     game = TicTacToe()
     game.play()
